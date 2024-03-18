@@ -25,13 +25,22 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data = 0;
+    int buffer[5] = {0}; // Buffer para armazenar os últimos valores
+    int sum = 0; 
+    int index = 0;
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
 
+            sum -= buffer[index];
+            buffer[index] = data;
+            sum += buffer[index];
 
+            index = (index + 1) % 5; // Atualiza o índice de forma circular
 
+            int movingAverage = sum / 5;
+            printf("Média móvel: %d\n", movingAverage);
 
             // deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
